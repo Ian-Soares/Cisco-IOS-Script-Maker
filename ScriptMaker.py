@@ -53,9 +53,9 @@ def printVlanmodeInterface():
     print('''
     >>> In this interface(s) <<<
 
-    [14] For access mode
+    [13] For access mode
 
-    [15] For trunk mode
+    [14] For trunk mode
     ''')
 
 def printIpRoutingCommands():
@@ -350,11 +350,11 @@ while True:
                         while True:
                             printVlanmodeInterface()
                             interface_vlan_mode = input('>>> ').strip()
-                            if interface_vlan_mode == '14':
+                            if interface_vlan_mode == '13':
                                 print('>>> Access interface configuration <<<')
                                 access_interface = input('Which will be the vlan? (example: 10): ').strip()
                                 break
-                            elif interface_vlan_mode == '15':
+                            elif interface_vlan_mode == '14':
                                 print('>>> Trunk interface configuration <<<')
                                 trunk_native_interface = input('Insert the native vlan(example: 99): ').strip()
                                 trunk_allowed_interface = input('Insert the allowed vlans(like this: 10,20,30,99): ').strip()
@@ -506,9 +506,9 @@ for i in commands1_input:
                 if i == '9':
                     ip_interface(interface_selected, ip_selected)
                 elif i == '10':
-                    if interface_vlan_mode == '14':
+                    if interface_vlan_mode == '13':
                         vlan_access_interface(interface_selected,access_interface)
-                    elif interface_vlan_mode == '15':
+                    elif interface_vlan_mode == '14':
                         vlan_trunk_interface(interface_selected, trunk_native_interface, trunk_allowed_interface)
                 elif i == '11':
                     shutdown_interface(interface_selected)
@@ -522,9 +522,9 @@ for i in commands1_input:
                 if i == '9':
                     ip_interface_range(interface_range_selected, ip_range_selected)
                 elif i == '10':
-                    if interface_range_vlan_mode == '14':
+                    if interface_range_vlan_mode == '13':
                         vlan_access_interface_range(interface_range_selected, access_interface_range)
-                    elif interface_range_vlan_mode == '15':
+                    elif interface_range_vlan_mode == '14':
                         vlan_trunk_interface_range(interface_range_selected, trunk_native_interface_range, trunk_allowed_interface_range)
                 elif i == '11':
                     shutdown_interface_range(interface_range_selected)
