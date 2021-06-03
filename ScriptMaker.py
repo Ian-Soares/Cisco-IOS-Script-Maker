@@ -2,6 +2,13 @@ global commands_int_input, ip_selected
 commands_int_input = 0
 commands_int_range_input = 0
 
+'''
+Variable "layer" defines which block of permission I stoped, just like an
+(config-if)# 
+or an
+(config-line)#
+'''
+
 def printCommandList():
     print('''
     ================================
@@ -62,131 +69,226 @@ def printIpRoutingCommands():
 
 def init_script():
     print('enable')
+    global layer
+    layer = '#'
 
 def finish_script():
+    print('end')
     print('wr')
 
 def hostname(name):
-    print('configure terminal')
-    print(f'hostname {name}')
-    print('end')
+    global layer
+    if layer == '#':
+        print('configure terminal')
+        print(f'hostname {name}')
+    elif layer == '(config)#':
+        print(f'hostname {name}')
+    elif layer == '(config-if)#' or layer == '(config-line)#':
+        print('exit')
+        print(f'hostname {name}')
+    layer = '(config)#'
 
 def password(psswrd):
-    print('configure terminal')
-    print('line console 0')
-    print(f'password {psswrd}')
-    print('login')
-    print('service password-encryption')
-    print('end')
+    global layer
+    if layer == '#':
+        print('configure terminal')
+        print('line console 0')
+        print(f'password {psswrd}')
+        print('login')
+        print('service password-encryption')
+    elif layer == '(config)#' or layer == '(config-line)#':
+        print('line console 0')
+        print(f'password {psswrd}')
+        print('login')
+        print('service password-encryption')
+    elif layer == '(config-if)#':
+        print('line console 0')
+        print(f'password {psswrd}')
+        print('login')
+        print('service password-encryption')
+        layer = '(config)#'
 
 def secret(secret):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
+
+    elif layer == '(config)#':
+        pass
+
+    elif layer == '(config-if)#' or layer == '(config-line)#':
+        print('exit')
+
     print(f'enable secret {secret}')
-    print('end')
+    layer = '(config)#'
 
 def banner(motd):
-    print('configure terminal')
-    print('line console 0')
+    global layer
+    if layer == '#':
+        print('configure terminal')
+        print('line console 0')
+    
+    elif layer == '(config)#':
+        print('line console 0')
+    
+    elif layer == '(config-line)#':
+        pass
+    
+    elif layer == '(config-if)#':
+        print('exit')
+        print('line console 0')
+
     print(f'banner motd "{motd}"')
-    print('end')
+    layer = '(config-line)#'
 
 def createVlans(number, name):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
+    
+    elif layer == '(config)#':
+        pass
+
+    elif layer == '(config-line)#' or layer == '(config-if)#':
+        print('exit')
+
     for i in range(0, len(number)):
         print(f'vlan {number[i]}')
         print(f'name {name[i]}')
-    print('end')
+    layer = '(config-if)#'
 
 def ip_interface(interface,ip):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
+    else:
+        pass 
     print(f'interface {interface}')
     print(f'ip address {ip[0]} {ip[1]}')
-    print('end')
+    layer = '(config-if)#'
 
 def vlan_access_interface(interface,vlan):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
+    else:
+        pass
     print(f'interface {interface}')
     print('switchport mode access')
     print(f'switchport access vlan {vlan}')
-    print('end')
+    layer = '(config-if)#'
 
 def vlan_trunk_interface(interface,native,allowed):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
     print(f'interface {interface}')
     print('switchport mode trunk')
     print(f'switchport trunk native vlan {native}')
     print(f'switchport trunk allowed vlan {allowed}')
-    print('end')
+    layer = '(config-if)#'
 
 def shutdown_interface(interface):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
     print(f'interface {interface}')
     print('shutdown')
-    print('end')
+    layer = '(config-if)#'
 
 def no_shutdown_interface(interface):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
     print(f'interface {interface}')
     print('no shutdown')
-    print('end')
+    layer = '(config-if)#'
 
 def ip_interface_range(interface_range, ip):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
     print(f'interface range {interface_range}')
     print(f'ip address {ip[0]} {ip[1]}')
-    print('end')
+    layer = '(config-if)#'
 
 def vlan_access_interface_range(interface_range, vlan):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
     print(f'interface range {interface_range}')
     print('switchport mode access')
     print(f'switchport access vlan {vlan}')
-    print('end')
+    layer = '(config-if)#'
 
 def vlan_trunk_interface_range(interface_range, native, allowed):
-    print('configure terminal')
+    global layer 
+    if layer == '#':
+        print('configure terminal')
     print(f'interface range {interface_range}')
     print('switchport mode trunk')
     print(f'switchport trunk native vlan {native}')
     print(f'switchport trunk allowed vlan {allowed}')
-    print('end')
+    layer = '(config-if)#'
 
 def shutdown_interface_range(interface_range):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
     print(f'interface range {interface_range}')
     print('shutdown')
-    print('end')
+    layer = '(config-if)#'
 
 def no_shutdown_interface_range(interface_range):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
     print(f'interface range {interface_range}')
     print('no shutdown')
-    print('end')
+    layer = '(config-if)#'
 
 def ssh_lineVty(ipDomainName, modulusKey, lineVTYrange, userInfo):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
+    
+    elif layer == '(config-if)#' or layer == '(config-line)#':
+        print('exit')
     print(f'ip domain-name {ipDomainName}')
     print(f'crypto key generate rsa general-keys modulus {modulusKey}')
     print(f'line vty {lineVTYrange}')
     print(f'username {userInfo[0]} privilege {userInfo[1]} secret {userInfo[2]}')
-    print('end')
+    print('exit')
+    layer = '(config)#'
 
 def static_routing(id_mask_destiny,who_knows_this_network):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
+    
+    elif layer == '(config-line)#' or layer == '(config-if)#':
+        print('exit')
     print(f'ip route {id_mask_destiny[0]} {id_mask_destiny[1]} {who_knows_this_network}')
-    print('end')
+    layer = '(config)#'
 
 def default_routing(int_or_ip):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
+    
+    elif layer == '(config-line)#' or layer == '(config-if)#':
+        print('exit')
     print(f'ip route 0.0.0.0 0.0.0.0 {int_or_ip}')
-    print('end')
+    layer = '(config)#'
 
 def subinterface_config(subint, vlan_subint, ip_subint):
-    print('configure terminal')
+    global layer
+    if layer == '#':
+        print('configure terminal')
     print(f'interface {subint}')
     print(f'encapsulation dot1q {vlan_subint}')
     print(f'ip address {ip_subint}')
-    print('end')
+    layer = '(config-if)#'
 
 ##############################
 #         INPUT AREA         #
@@ -337,7 +439,10 @@ while True:
                     encryptionModulusSSH = input('Enter the amount of bits in your key encryptation(example: 1024): ')
                     lineVTY_chose = input('Select the line VTY range (example: 0 15): ').strip()
                     username_priv_secret = input('Enter the username, the privilege and the secret in sequence (example: ADMIN,15,Secret*00): ').strip().split(',')
-                    break
+                    if len(username_priv_secret) == 3: 
+                        break
+                    else:
+                        print('You need to enter the username, the privilege and the secret. (example: Admin,15,Secret*admin)')
                 except:
                     print('Something went wrong, try again.')
 
@@ -351,10 +456,14 @@ while True:
                             print('>>> Static ip routing <<<')
                             destiny_id_and_mask = input('Enter the id and mask of the destiny network (example: 172.16.0.0,255.255.0.0): ').strip().split(',')
                             who_knows_the_net = input('Enter the interface or next host neighbour (example: s0/0/1 or 200.100.0.1): ').strip()
-                        if i == '17':
+                        elif i == '17':
                             print('>>> Default ip routing <<<')
                             default_who_knows_the_net = input('Enter the interface or next host neighbour (example: s0/0/1 or 200.100.0.1): ').strip()
-                    break
+                    if len(destiny_id_and_mask) == 2:
+                        break
+                    else:
+                        print('You must enter the id and the mask.')
+                        print('Try something like this: 172.16.0.0,255.255.0.0')
                 except:
                     print('Something went wrong, try again.')
 
