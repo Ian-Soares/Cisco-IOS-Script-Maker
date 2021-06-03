@@ -93,20 +93,14 @@ def password(psswrd):
     if layer == '#':
         print('configure terminal')
         print('line console 0')
-        print(f'password {psswrd}')
-        print('login')
-        print('service password-encryption')
+
     elif layer == '(config)#' or layer == '(config-line)#':
         print('line console 0')
-        print(f'password {psswrd}')
-        print('login')
-        print('service password-encryption')
+
     elif layer == '(config-if)#':
         print('line console 0')
-        print(f'password {psswrd}')
-        print('login')
-        print('service password-encryption')
-        layer = '(config)#'
+    print('service password-encryption')
+    layer = '(config)#'
 
 def secret(secret):
     global layer
@@ -139,7 +133,7 @@ def banner(motd):
         print('line console 0')
 
     print(f'banner motd "{motd}"')
-    layer = '(config-line)#'
+    layer = '(config)#'
 
 def createVlans(number, name):
     global layer
