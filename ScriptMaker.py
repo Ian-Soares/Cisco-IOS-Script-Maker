@@ -281,7 +281,7 @@ def subinterface_config(subint, vlan_subint, ip_subint):
         print('configure terminal')
     print(f'interface {subint}')
     print(f'encapsulation dot1q {vlan_subint}')
-    print(f'ip address {ip_subint}')
+    print(f'ip address {ip_subint[0]} {ip_subint[1]}')
     layer = '(config-if)#'
 
 ##############################
