@@ -33,38 +33,38 @@ def printCommandList():
 
     [8] Create a SSH Remote Access
     
-    [99] IP Routing
+    [9] IP Routing
 
-    [100] Subinterface
+    [10] Subinterface
     ''')
 
 def printInterfaceCommandList():
     print('''
-    [9] Set IP Address (for Routers or SW L3)
+    [11] Set IP Address (for Routers or SW L3)
 
-    [10] Set a switchport mode (for Switches)
+    [12] Set a switchport mode (for Switches)
 
-    [11] Shutdown
+    [13] Shutdown
 
-    [12] No shutdown
+    [14] No shutdown
     ''')
 
 def printVlanmodeInterface():
     print('''
     >>> In this interface(s) <<<
 
-    [13] For access mode
+    [15] For access mode
 
-    [14] For trunk mode
+    [16] For trunk mode
     ''')
 
 def printIpRoutingCommands():
     print('''
     >>> Ip routing <<<
 
-    [16] For a Static Routing
+    [17] For a Static Routing
 
-    [17] For a Default Routing
+    [18] For a Default Routing
     ''')
 
 def init_script():
@@ -331,30 +331,30 @@ while True:
             try:
                 commands_int_input = input('>>> ').strip().split(',')
                 for i in commands_int_input:
-                    if i == '9':
+                    if i == '11':
 
                         while True:
                             try:
                                 print('>>> Interface IP configuration <<<')
                                 print('What will be the IP Address and Subnet Mask?')
-                                ip_selected = input('example: 172.16.1.1,255.255.255.0): ').strip().split(',')
+                                ip_selected = input('example: 172.16.1.1 255.255.255.0): ').strip().split(' ')
                                 if len(ip_selected) == 2:
                                     break
                                 else:
                                     print('----- You need to enter the IP Address and the Subnet Mask. -----')
-                                    print('----- Try something like this: 192.168.0.138,255,255,255,128 -----')
+                                    print('----- Try something like this: 192.168.0.138 255,255,255,128 -----')
                             except:
-                                print('Something went wrong, try a input like this: 10.128.0.1,255.128.0.0')
+                                print('Something went wrong, try a input like this: 10.128.0.1 255.128.0.0')
                     
-                    elif i == '10':
+                    elif i == '12':
                         while True:
                             printVlanmodeInterface()
                             interface_vlan_mode = input('>>> ').strip()
-                            if interface_vlan_mode == '13':
+                            if interface_vlan_mode == '15':
                                 print('>>> Access interface configuration <<<')
                                 access_interface = input('Which will be the vlan? (example: 10): ').strip()
                                 break
-                            elif interface_vlan_mode == '14':
+                            elif interface_vlan_mode == '16':
                                 print('>>> Trunk interface configuration <<<')
                                 trunk_native_interface = input('Insert the native vlan(example: 99): ').strip()
                                 trunk_allowed_interface = input('Insert the allowed vlans(like this: 10,20,30,99): ').strip()
@@ -362,10 +362,10 @@ while True:
                             else:
                                 print('Sorry, that is not an option.')
                     
-                    elif i == '11':
+                    elif i == '13':
                         continue
                     
-                    elif i == '12':
+                    elif i == '14':
                         continue
                     
                     else:
@@ -383,29 +383,29 @@ while True:
                 commands_int_range_input = input('>>> ').strip().split(',')
             
                 for i in commands_int_range_input:
-                    if i == '9':
+                    if i == '11':
             
                         while True:
                             try:
                                 print('What will be the IP Address and Subnet Mask?')
-                                ip_range_selected = input('example: 172.16.1.1,255.255.255.0): ').strip().split(',')
+                                ip_range_selected = input('example: 172.16.1.1 255.255.255.0): ').strip().split(' ')
                                 if len(ip_range_selected) == 2:
                                     break
                                 else:
                                     print('You need to enter the IP Address and the Subnet Mask.')
-                                    print('Try something like this: 192.168.0.138,255,255,255,128')
+                                    print('Try something like this: 192.168.0.138 255.255.255.128')
                             except:
-                                print('Something went wrong, try a input like this: 10.128.0.1,255.128.0.0')
+                                print('Something went wrong, try a input like this: 10.128.0.1 255.128.0.0')
                     
-                    elif i == '10':
+                    elif i == '12':
                         while True:
                             printVlanmodeInterface()
                             interface_range_vlan_mode = input('>>> ').strip()
-                            if interface_range_vlan_mode == '13':
+                            if interface_range_vlan_mode == '15':
                                 print('>>> Access interfaces configuration <<<')
                                 access_interface_range = input('Which will be the VLAN? (example: 10): ').strip()
                                 break
-                            elif interface_range_vlan_mode == '14':
+                            elif interface_range_vlan_mode == '16':
                                 print('>>> Trunk interfaces configuration <<<')
                                 trunk_native_interface_range = input('Insert the native VLAN(example: 99): ').strip()
                                 trunk_allowed_interface_range = input('Insert the allowed VLANs(like this: 10,20,30,99): ').strip()
@@ -413,10 +413,10 @@ while True:
                             else:
                                 print('Sorry, that is not an option.')
 
-                    elif i == '11':
+                    elif i == '13':
                         continue
 
-                    elif i == '12':
+                    elif i == '14':
                         continue
 
                     else:
@@ -432,42 +432,47 @@ while True:
                     ip_domain_name_chose = input('Enter the ip domain-name: ')
                     encryptionModulusSSH = input('Enter the amount of bits in your key encryptation(example: 1024): ')
                     lineVTY_chose = input('Select the line VTY range (example: 0 15): ').strip()
-                    username_priv_secret = input('Enter the username, the privilege and the secret in sequence (example: ADMIN,15,Secret*00): ').strip().split(',')
+                    username_priv_secret = input('Enter the username, the privilege and the secret in sequence (example: ADMIN 15 Secret*00): ').strip().split(' ')
                     if len(username_priv_secret) == 3: 
                         break
                     else:
-                        print('You need to enter the username, the privilege and the secret. (example: Admin,15,Secret*admin)')
+                        print('You need to enter the username, the privilege and the secret. (example: Admin 15 Secret*Admin)')
                 except:
                     print('Something went wrong, try again.')
 
-        elif i == '99':
+        elif i == '9':
             while True:
                 try:
                     printIpRoutingCommands()
-                    commands_ipRouting_input = input('Which command(s) do you want to define?(example: 16,17): ').strip().split(',')
+                    commands_ipRouting_input = input('Which command(s) do you want to define?(example: 17,18): ').strip().split(',')
                     for i in commands_ipRouting_input:
-                        if i == '16':
+                        if i == '17':
                             print('>>> Static ip routing <<<')
-                            destiny_id_and_mask = input('Enter the id and mask of the destiny network (example: 172.16.0.0,255.255.0.0): ').strip().split(',')
+                            destiny_id_and_mask = input('Enter the id and mask of the destiny network (example: 172.16.0.0 255.255.0.0): ').strip().split(' ')
                             who_knows_the_net = input('Enter the interface or next host neighbour (example: s0/0/1 or 200.100.0.1): ').strip()
-                        elif i == '17':
+                        elif i == '18':
                             print('>>> Default ip routing <<<')
                             default_who_knows_the_net = input('Enter the interface or next host neighbour (example: s0/0/1 or 200.100.0.1): ').strip()
                     if len(destiny_id_and_mask) == 2:
                         break
                     else:
                         print('You must enter the id and the mask.')
-                        print('Try something like this: 172.16.0.0,255.255.0.0')
+                        print('Try something like this: 172.16.0.0 255.255.0.0')
                 except:
                     print('Something went wrong, try again.')
 
-        elif i == '100':
+        elif i == '10':
             while True:
                 try:
                     print('>>> Subinterface configuration <<<')
                     subinterface_chose = input('Enter the subinterface (example: g0/0.10): ').strip()
                     subinterface_vlan_chose = input('Which VLAN will this interface use?(example: 10): ').strip()
-                    subinterface_ip_chose = input('Enter the subinterface IP: ').strip()
+                    while True:
+                        subinterface_ip_chose = input('Enter the subinterface IP and mask (example: 192.168.0.1 255.255.255.0): ').strip().split(' ')
+                        if len(subinterface_ip_chose) == 2:
+                            break
+                        else:
+                            print('You need to inform IP Address and Subnet Mask')
                     break
                 except:
                     print('Something went wrong, try again.')
@@ -503,47 +508,47 @@ for i in commands1_input:
         
         if commands_int_input != 0:
             for i in commands_int_input:
-                if i == '9':
+                if i == '11':
                     ip_interface(interface_selected, ip_selected)
-                elif i == '10':
-                    if interface_vlan_mode == '13':
-                        vlan_access_interface(interface_selected,access_interface)
-                    elif interface_vlan_mode == '14':
-                        vlan_trunk_interface(interface_selected, trunk_native_interface, trunk_allowed_interface)
-                elif i == '11':
-                    shutdown_interface(interface_selected)
                 elif i == '12':
+                    if interface_vlan_mode == '15':
+                        vlan_access_interface(interface_selected,access_interface)
+                    elif interface_vlan_mode == '16':
+                        vlan_trunk_interface(interface_selected, trunk_native_interface, trunk_allowed_interface)
+                elif i == '13':
+                    shutdown_interface(interface_selected)
+                elif i == '14':
                     no_shutdown_interface(interface_selected)
 
     elif i == '7':
         
         if commands_int_range_input != 0:
             for i in commands_int_range_input:
-                if i == '9':
+                if i == '11':
                     ip_interface_range(interface_range_selected, ip_range_selected)
-                elif i == '10':
-                    if interface_range_vlan_mode == '13':
-                        vlan_access_interface_range(interface_range_selected, access_interface_range)
-                    elif interface_range_vlan_mode == '14':
-                        vlan_trunk_interface_range(interface_range_selected, trunk_native_interface_range, trunk_allowed_interface_range)
-                elif i == '11':
-                    shutdown_interface_range(interface_range_selected)
                 elif i == '12':
+                    if interface_range_vlan_mode == '15':
+                        vlan_access_interface_range(interface_range_selected, access_interface_range)
+                    elif interface_range_vlan_mode == '16':
+                        vlan_trunk_interface_range(interface_range_selected, trunk_native_interface_range, trunk_allowed_interface_range)
+                elif i == '13':
+                    shutdown_interface_range(interface_range_selected)
+                elif i == '14':
                     no_shutdown_interface_range(interface_range_selected)
     
     elif i == '8':
         
         ssh_lineVty(ip_domain_name_chose, encryptionModulusSSH, lineVTY_chose, username_priv_secret)
 
-    elif i == '99':
+    elif i == '9':
         
         for i in commands_ipRouting_input:
-            if i == '16':
+            if i == '17':
                 static_routing(destiny_id_and_mask, who_knows_the_net)
-            elif i == '17':
+            elif i == '18':
                 default_routing(default_who_knows_the_net)
 
-    elif i == '100':
+    elif i == '10':
         subinterface_config(subinterface_chose,subinterface_vlan_chose,subinterface_ip_chose)
 
 finish_script()
