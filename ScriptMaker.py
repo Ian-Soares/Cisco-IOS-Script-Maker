@@ -252,8 +252,7 @@ def ssh_lineVty(ipDomainName, modulusKey, lineVTYrange, userInfo):
     print(f'crypto key generate rsa general-keys modulus {modulusKey}')
     print(f'line vty {lineVTYrange}')
     print(f'username {userInfo[0]} privilege {userInfo[1]} secret {userInfo[2]}')
-    print('exit')
-    layer = '(config)#'
+    layer = '(config-line)#'
 
 def static_routing(id_mask_destiny,who_knows_this_network):
     global layer
