@@ -1,6 +1,30 @@
 # Cisco IOS Script Maker
+
+#### About the project:
 I am now studying networking in a technnical course,
 this repository is a project of concentrating all the commands I'm currently learning.
 In this journey of learning, I want to still make some commits here for atualization.
 
-I guess that's it, thank you for visiting my project :)
+#### Features:
+
+- [x] Change hostname
+
+- [x] Console line password (and encryption)
+
+- [x] Enable secret
+
+- [x] Create VLANs and attribute it to a interface and/or a interface range
+
+- [x] Set IP Address to a interface or a interface range
+
+- [x] Shutdown or no shutdown in a interface or interface range
+
+- [x] Define static and default ip routing
+
+- [x] Configure subinterfaces
+
+- [x] Configure remote access with SSH  
+
+- [ ] Deal with link-local
+
+- [ ] Deal with IPv6 
