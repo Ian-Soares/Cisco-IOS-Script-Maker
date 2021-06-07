@@ -99,6 +99,8 @@ def password(psswrd):
 
     elif layer == '(config-if)#':
         print('line console 0')
+    print(f'password {psswrd}')
+    print('login')
     print('service password-encryption')
     layer = '(config)#'
 
@@ -363,10 +365,10 @@ while True:
                     
                     elif i == '13':
                         continue
-                    
+
                     elif i == '14':
                         continue
-                    
+
                     else:
                         print(f'Number {i} could not be reached.')
             
@@ -377,13 +379,13 @@ while True:
             print('>>> Interface range configuration <<<')
             interface_range_selected = input('Enter your interface range selected (example: f0/0-24): ').strip()
             printInterfaceCommandList()
-            
+
             try:
                 commands_int_range_input = input('>>> ').strip().split(',')
-            
+
                 for i in commands_int_range_input:
                     if i == '11':
-            
+
                         while True:
                             try:
                                 print('What will be the IP Address and Subnet Mask?')
@@ -395,7 +397,7 @@ while True:
                                     print('Try something like this: 192.168.0.138 255.255.255.128')
                             except:
                                 print('Something went wrong, try a input like this: 10.128.0.1 255.128.0.0')
-                    
+
                     elif i == '12':
                         while True:
                             printVlanmodeInterface()
