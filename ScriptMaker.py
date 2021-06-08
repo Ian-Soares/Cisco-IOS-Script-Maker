@@ -41,6 +41,8 @@ def printCommandList():
 def printInterfaceCommandList():
     print('''
     [11] Set IP Address (for Routers or SW L3)
+    
+    [11v6] Set IPv6 Address (for Routers or SW L3)
 
     [12] Set a switchport mode (for Switches)
 
@@ -163,6 +165,16 @@ def ip_interface(interface,ip):
     print(f'ip address {ip[0]} {ip[1]}')
     layer = '(config-if)#'
 
+def ipv6_interface(interface,ipv6):
+    global layer
+    if layer == '#':
+        print('configure terminal')
+    else:
+        pass
+    print(f'interface {interface}')
+    print(f'ipv6 address {ipv6}')
+    layer = '(config-if)#'
+
 def vlan_access_interface(interface,vlan):
     global layer
     if layer == '#':
@@ -206,6 +218,14 @@ def ip_interface_range(interface_range, ip):
         print('configure terminal')
     print(f'interface range {interface_range}')
     print(f'ip address {ip[0]} {ip[1]}')
+    layer = '(config-if)#'
+
+def ipv6_interface_range(interface_range, ipv6):
+    global layer
+    if layer == '#':
+        print('configure terminal')
+    print(f'interface range {interface_range}')
+    print(f'ip address {ipv6}')
     layer = '(config-if)#'
 
 def vlan_access_interface_range(interface_range, vlan):
@@ -327,7 +347,7 @@ while True:
                     print('Sorry, but the value for your VLAN number or name is not available.')
         elif i == '6':
             print('>>> Interface selection <<<')
-            interface_selected = input('What will be your interface selected? (example: g0/1 or g1/0/24): ').strip()
+            interface_selected = input('What will be your interface selected? (example: g0/1 or g1/0/24): ').strip().lower()
             printInterfaceCommandList()
             try:
                 commands_int_input = input('>>> ').strip().split(',')
@@ -338,7 +358,7 @@ while True:
                             try:
                                 print('>>> Interface IP configuration <<<')
                                 print('What will be the IP Address and Subnet Mask?')
-                                ip_selected = input('example: 172.16.1.1 255.255.255.0): ').strip().split(' ')
+                                ip_selected = input('(example: 172.16.1.1 255.255.255.0): ').strip().split(' ')
                                 if len(ip_selected) == 2:
                                     break
                                 else:
@@ -347,6 +367,16 @@ while True:
                             except:
                                 print('Something went wrong, try a input like this: 10.128.0.1 255.128.0.0')
                     
+                    elif i.lower() == '11v6':
+                        while True:
+                            try:
+                                print('>>> Interface IPv6 configuration <<<')
+                                print('What will be the IPv6 Address?')
+                                ipv6_selected = input('(example: 2000:200:100::1/64): ').strip()
+                                break
+                            except:
+                                print('Please try again, something went wrong!')
+
                     elif i == '12':
                         while True:
                             printVlanmodeInterface()
@@ -377,7 +407,7 @@ while True:
 
         elif i == '7':
             print('>>> Interface range configuration <<<')
-            interface_range_selected = input('Enter your interface range selected (example: f0/0-24): ').strip()
+            interface_range_selected = input('Enter your interface range selected (example: f0/0-24): ').strip().lower()
             printInterfaceCommandList()
 
             try:
@@ -388,6 +418,7 @@ while True:
 
                         while True:
                             try:
+                                print('>>> Interface IPv6 range configuration <<<')
                                 print('What will be the IP Address and Subnet Mask?')
                                 ip_range_selected = input('example: 172.16.1.1 255.255.255.0): ').strip().split(' ')
                                 if len(ip_range_selected) == 2:
@@ -397,6 +428,16 @@ while True:
                                     print('Try something like this: 192.168.0.138 255.255.255.128')
                             except:
                                 print('Something went wrong, try a input like this: 10.128.0.1 255.128.0.0')
+
+                    elif i.lower() == '11v6':
+                        while True:
+                            try:
+                                print('>>> Interface IPv6 range configuration <<<')
+                                print('What will be the IPv6 range Address?')
+                                ipv6_range_selected = input('(example: 2000:200:100::1/64): ').strip()
+                                break
+                            except:
+                                print('Please try again, something went wrong!')
 
                     elif i == '12':
                         while True:
@@ -466,7 +507,7 @@ while True:
             while True:
                 try:
                     print('>>> Subinterface configuration <<<')
-                    subinterface_chose = input('Enter the subinterface (example: g0/0.10): ').strip()
+                    subinterface_chose = input('Enter the subinterface (example: g0/0.10): ').strip().lower()
                     subinterface_vlan_chose = input('Which VLAN will this interface use?(example: 10): ').strip()
                     while True:
                         subinterface_ip_chose = input('Enter the subinterface IP and mask (example: 192.168.0.1 255.255.255.0): ').strip().split(' ')
@@ -509,9 +550,9 @@ for i in commands1_input:
         
         if commands_int_input != 0:
             for i in commands_int_input:
-                if i == '11':
-                    ip_interface(interface_selected, ip_selected)
-                elif i == '12':
+                if i == '11': ip_interface(interface_selected, ip_selected)
+                elif i.lower() == '11v6': ipv6_interface(interface_selected, ipv6_selected)
+                elif i == '12': 
                     if interface_vlan_mode == '15':
                         vlan_access_interface(interface_selected,access_interface)
                     elif interface_vlan_mode == '16':
@@ -525,8 +566,8 @@ for i in commands1_input:
         
         if commands_int_range_input != 0:
             for i in commands_int_range_input:
-                if i == '11':
-                    ip_interface_range(interface_range_selected, ip_range_selected)
+                if i == '11': ip_interface_range(interface_range_selected, ip_range_selected)
+                elif i.lower() == '11v6': ipv6_interface_range(interface_range_selected, ipv6_range_selected)
                 elif i == '12':
                     if interface_range_vlan_mode == '15':
                         vlan_access_interface_range(interface_range_selected, access_interface_range)
