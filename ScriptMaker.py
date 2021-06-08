@@ -69,6 +69,15 @@ def printIpRoutingCommands():
     [18] For a Default Routing
     ''')
 
+def printSubinterfacesCommands():
+    print('''
+    [19] For VLAN attribution (encapsulation)
+
+    [20] For IP attribution
+    
+    [20v6] For IPv6 attribution
+    ''')
+
 def init_script():
     print('enable')
     global layer
@@ -296,13 +305,27 @@ def default_routing(int_or_ip):
     print(f'ip route 0.0.0.0 0.0.0.0 {int_or_ip}')
     layer = '(config)#'
 
-def subinterface_config(subint, vlan_subint, ip_subint):
+def subinterface_vlan_encapsulation(subint,vlan_subint):
     global layer
     if layer == '#':
         print('configure terminal')
     print(f'interface {subint}')
     print(f'encapsulation dot1q {vlan_subint}')
+
+def subinterface_ip(subint, ip_subint):
+    global layer
+    if layer == '#':
+        print('configure terminal')
+    print(f'interface {subint}')
     print(f'ip address {ip_subint[0]} {ip_subint[1]}')
+    layer = '(config-if)#'
+
+def subinterface_ipv6(subint, ipv6_subint):
+    global layer
+    if layer == '#':
+        print('configure terminal')
+    print(f'interface {subint}')
+    print(f'ipv6 address {ipv6_subint}')
     layer = '(config-if)#'
 
 ##############################
@@ -507,14 +530,20 @@ while True:
             while True:
                 try:
                     print('>>> Subinterface configuration <<<')
+                    printSubinterfacesCommands()
+                    commands_subint_input = input('Which command(s) do you want to define?(example: 19,20v6): ').strip().lower().split(',')
                     subinterface_chose = input('Enter the subinterface (example: g0/0.10): ').strip().lower()
-                    subinterface_vlan_chose = input('Which VLAN will this interface use?(example: 10): ').strip()
-                    while True:
-                        subinterface_ip_chose = input('Enter the subinterface IP and mask (example: 192.168.0.1 255.255.255.0): ').strip().split(' ')
-                        if len(subinterface_ip_chose) == 2:
-                            break
-                        else:
-                            print('You need to inform IP Address and Subnet Mask')
+                    for i in commands_subint_input:
+                        if i == '19':
+                            subinterface_vlan_chose = input('Which VLAN will this interface use?(example: 10): ').strip()
+                        elif i == '20':
+                            while True:
+                                subinterface_ip_chose = input('Enter the subinterface IP and mask (example: 192.168.0.1 255.255.255.0): ').strip().split(' ')
+                                if len(subinterface_ip_chose) == 2:
+                                    break
+                                else:
+                                    print('You need to inform IP Address and Subnet Mask')
+                        elif i == '20v6': subinterface_ipv6_chose = input('Enter the subinterface IPv6 (example: 2040:db8:cafe::1/64): ').strip()
                     break
                 except:
                     print('Something went wrong, try again.')
@@ -531,20 +560,15 @@ Your script is:
 ''')
 init_script()
 for i in commands1_input:
-    if i == '1':
-        hostname(hostname_chose)
+    if i == '1': hostname(hostname_chose)
 
-    elif i == '2':
-        password(password_chose)
+    elif i == '2': password(password_chose)
 
-    elif i == '3':
-        secret(secret_chose)
+    elif i == '3': secret(secret_chose)
 
-    elif i == '4':
-        banner(banner_chose)
+    elif i == '4': banner(banner_chose)
 
-    elif i == '5':
-        createVlans(vlanNumbers_chose, vlanNames_chose)
+    elif i == '5': createVlans(vlanNumbers_chose, vlanNames_chose)
 
     elif i == '6':
         
@@ -553,14 +577,10 @@ for i in commands1_input:
                 if i == '11': ip_interface(interface_selected, ip_selected)
                 elif i.lower() == '11v6': ipv6_interface(interface_selected, ipv6_selected)
                 elif i == '12': 
-                    if interface_vlan_mode == '15':
-                        vlan_access_interface(interface_selected,access_interface)
-                    elif interface_vlan_mode == '16':
-                        vlan_trunk_interface(interface_selected, trunk_native_interface, trunk_allowed_interface)
-                elif i == '13':
-                    shutdown_interface(interface_selected)
-                elif i == '14':
-                    no_shutdown_interface(interface_selected)
+                    if interface_vlan_mode == '15': vlan_access_interface(interface_selected,access_interface)
+                    elif interface_vlan_mode == '16': vlan_trunk_interface(interface_selected, trunk_native_interface, trunk_allowed_interface)
+                elif i == '13': shutdown_interface(interface_selected)
+                elif i == '14': no_shutdown_interface(interface_selected)
 
     elif i == '7':
         
@@ -569,14 +589,10 @@ for i in commands1_input:
                 if i == '11': ip_interface_range(interface_range_selected, ip_range_selected)
                 elif i.lower() == '11v6': ipv6_interface_range(interface_range_selected, ipv6_range_selected)
                 elif i == '12':
-                    if interface_range_vlan_mode == '15':
-                        vlan_access_interface_range(interface_range_selected, access_interface_range)
-                    elif interface_range_vlan_mode == '16':
-                        vlan_trunk_interface_range(interface_range_selected, trunk_native_interface_range, trunk_allowed_interface_range)
-                elif i == '13':
-                    shutdown_interface_range(interface_range_selected)
-                elif i == '14':
-                    no_shutdown_interface_range(interface_range_selected)
+                    if interface_range_vlan_mode == '15': vlan_access_interface_range(interface_range_selected, access_interface_range)
+                    elif interface_range_vlan_mode == '16': vlan_trunk_interface_range(interface_range_selected, trunk_native_interface_range, trunk_allowed_interface_range)
+                elif i == '13': shutdown_interface_range(interface_range_selected)
+                elif i == '14': no_shutdown_interface_range(interface_range_selected)
     
     elif i == '8':
         
@@ -585,13 +601,14 @@ for i in commands1_input:
     elif i == '9':
         
         for i in commands_ipRouting_input:
-            if i == '17':
-                static_routing(destiny_id_and_mask, who_knows_the_net)
-            elif i == '18':
-                default_routing(default_who_knows_the_net)
+            if i == '17': static_routing(destiny_id_and_mask, who_knows_the_net)
+            elif i == '18': default_routing(default_who_knows_the_net)
 
     elif i == '10':
-        subinterface_config(subinterface_chose,subinterface_vlan_chose,subinterface_ip_chose)
+        for i in commands_subint_input:
+            if i == '19': subinterface_vlan_encapsulation(subinterface_chose,subinterface_vlan_chose)
+            elif i == '20': subinterface_ip(subinterface_chose,subinterface_ip_chose)
+            elif i == '20v6': subinterface_ipv6(subinterface_chose,subinterface_ipv6_chose)
 
 finish_script()
 print()
