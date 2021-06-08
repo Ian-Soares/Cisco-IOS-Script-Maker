@@ -13,11 +13,11 @@ In this journey of learning, I want to still make some commits here for atualiza
 
 - [x] Enable secret
 
-- [x] Create VLANs and attribute it to a interface and/or a interface range
+- [x] Create VLANs and attribute it to the interfaces
 
-- [x] Set IP Address to a interface or a interface range
+- [x] Set IP Address to interfaces
 
-- [x] Shutdown or no shutdown in a interface or interface range
+- [x] Shutdown or no shutdown in the interfaces
 
 - [x] Define static and default ip routing
 
@@ -25,6 +25,6 @@ In this journey of learning, I want to still make some commits here for atualiza
 
 - [x] Configure remote access with SSH  
 
-- [ ] Deal with link-local
+- [x] Deal with IPv6 in the interfaces
 
-- [ ] Deal with IPv6 
+- [ ] Deal with link-local
