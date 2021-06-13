@@ -66,7 +66,11 @@ def printIpRoutingCommands():
 
     [17] For a Static Routing
 
+    [17v6] For a IPv6 Static Routing
+
     [18] For a Default Routing
+
+    [18v6] For a IPv6 Default Routing
     ''')
 
 def printSubinterfacesCommands():
@@ -76,6 +80,8 @@ def printSubinterfacesCommands():
     [20] For IP attribution
     
     [20v6] For IPv6 attribution
+
+    [21] For link-local attribution
     ''')
 
 def init_script():
@@ -295,6 +301,16 @@ def static_routing(id_mask_destiny,who_knows_this_network):
     print(f'ip route {id_mask_destiny[0]} {id_mask_destiny[1]} {who_knows_this_network}')
     layer = '(config)#'
 
+def ipv6_static_routing(idv6_mask_destiny,who_knows_this_network):
+    global layer
+    if layer == '#':
+        print('configure terminal')
+    
+    elif layer == '(config-line)#' or layer == '(config-if)#':
+        print('exit')
+    print(f'ipv6 route {idv6_mask_destiny} {who_knows_this_network}')
+    layer = '(config)#'
+
 def default_routing(int_or_ip):
     global layer
     if layer == '#':
@@ -303,6 +319,16 @@ def default_routing(int_or_ip):
     elif layer == '(config-line)#' or layer == '(config-if)#':
         print('exit')
     print(f'ip route 0.0.0.0 0.0.0.0 {int_or_ip}')
+    layer = '(config)#'
+
+def default_ipv6_routing(intv6_or_ipv6):
+    global layer
+    if layer == '#':
+        print('configure terminal')
+    
+    elif layer == '(config-line)#' or layer == '(config-if)#':
+        print('exit')
+    print(f'ipv6 route ::/0 {intv6_or_ipv6}')
     layer = '(config)#'
 
 def subinterface_vlan_encapsulation(subint,vlan_subint):
@@ -326,6 +352,14 @@ def subinterface_ipv6(subint, ipv6_subint):
         print('configure terminal')
     print(f'interface {subint}')
     print(f'ipv6 address {ipv6_subint}')
+    layer = '(config-if)#'
+
+def subinterface_ipv6_linklocal(subint, ipv6_linklocal_subint):
+    global layer
+    if layer == '#':
+        print('configure terminal')
+    print(f'interface {subint}')
+    print(f'ipv6 address {ipv6_linklocal_subint} link-local')
     layer = '(config-if)#'
 
 ##############################
@@ -509,20 +543,26 @@ while True:
             while True:
                 try:
                     printIpRoutingCommands()
-                    commands_ipRouting_input = input('Which command(s) do you want to define?(example: 17,18): ').strip().split(',')
+                    commands_ipRouting_input = input('Which command(s) do you want to define?(example: 17,18): ').strip().lower().split(',')
                     for i in commands_ipRouting_input:
                         if i == '17':
-                            print('>>> Static ip routing <<<')
+                            print('>>> Static IP routing <<<')
                             destiny_id_and_mask = input('Enter the id and mask of the destiny network (example: 172.16.0.0 255.255.0.0): ').strip().split(' ')
                             who_knows_the_net = input('Enter the interface or next host neighbour (example: s0/0/1 or 200.100.0.1): ').strip()
+                        
+                        elif i == '17v6':
+                            print('>>> Static IPv6 routing configuration<<<')
+                            destiny_idv6_and_mask = input('Enter the id and mask of the destiny network (example: 2001:db8:cafe:10::/64): ').strip()
+                            who_knows_the_net_ipv6 = input('Enter the interface or next host neighbour (example: s0/0/1 or 2001:db8:cafe:10::1): ').strip()
+
                         elif i == '18':
-                            print('>>> Default ip routing <<<')
+                            print('>>> Default IP routing <<<')
                             default_who_knows_the_net = input('Enter the interface or next host neighbour (example: s0/0/1 or 200.100.0.1): ').strip()
-                    if len(destiny_id_and_mask) == 2:
-                        break
-                    else:
-                        print('You must enter the id and the mask.')
-                        print('Try something like this: 172.16.0.0 255.255.0.0')
+                    
+                        elif i == '18v6':
+                            print('>>> Default IPv6 routing <<<')
+                            default_ipv6_who_knows_the_net = input('Enter the interface or next host neighbour (example: s0/0/1 or 2001:db8:cafe:10::1): ').strip()
+                    break
                 except:
                     print('Something went wrong, try again.')
 
@@ -544,6 +584,7 @@ while True:
                                 else:
                                     print('You need to inform IP Address and Subnet Mask')
                         elif i == '20v6': subinterface_ipv6_chose = input('Enter the subinterface IPv6 (example: 2040:db8:cafe::1/64): ').strip()
+                        elif i == '21': subint_linklocal_chose = input('Enter the IPv6 link local (example: fe80::1): ').strip()
                     break
                 except:
                     print('Something went wrong, try again.')
@@ -602,13 +643,16 @@ for i in commands1_input:
         
         for i in commands_ipRouting_input:
             if i == '17': static_routing(destiny_id_and_mask, who_knows_the_net)
+            elif i.lower() == '17v6': ipv6_static_routing(destiny_idv6_and_mask,who_knows_the_net_ipv6)
             elif i == '18': default_routing(default_who_knows_the_net)
+            elif i == '18v6': default_ipv6_routing(default_ipv6_who_knows_the_net)
 
     elif i == '10':
         for i in commands_subint_input:
             if i == '19': subinterface_vlan_encapsulation(subinterface_chose,subinterface_vlan_chose)
             elif i == '20': subinterface_ip(subinterface_chose,subinterface_ip_chose)
             elif i == '20v6': subinterface_ipv6(subinterface_chose,subinterface_ipv6_chose)
+            elif i == '21': subinterface_ipv6_linklocal(subinterface_chose, subint_linklocal_chose)
 
 finish_script()
 print()
