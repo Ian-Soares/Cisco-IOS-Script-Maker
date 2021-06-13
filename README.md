@@ -21,10 +21,12 @@ In this journey of learning, I want to still make some commits here for atualiza
 
 - [x] Define static and default ip routing
 
+- [x] Define static and default ipv6 routing
+
 - [x] Configure subinterfaces
 
 - [x] Configure remote access with SSH  
 
 - [x] Deal with IPv6 in the interfaces
 
-- [ ] Deal with link-local
+- [x] Deal with link-local
